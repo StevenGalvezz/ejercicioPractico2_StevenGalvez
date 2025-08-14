@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Tabla de funciones -->
+<div th:fragment="tablaFunciones(funciones)">
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Película</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Sala</th>
+                <th>Precio</th>
+                <th>Asientos totales</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="f : ${funciones}">
+                <td th:text="${f.pelicula.titulo}"></td>
+                <td th:text="${f.fecha}"></td>
+                <td th:text="${f.hora}"></td>
+                <td th:text="${f.sala}"></td>
+                <td th:text="${f.precio}"></td>
+                <td th:text="${f.totalAsientos}"></td>
+                <td>
+                    <a th:href="@{/funcion/modificar/{id}(id=${f.id})}" class="btn btn-warning btn-sm">Editar</a>
+                    <a th:href="@{/funcion/eliminar/{id}(id=${f.id})}" class="btn btn-danger btn-sm"
+                       onclick="return confirm('¿Eliminar función?')">Eliminar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Formulario de función -->
+<div th:fragment="formFuncion(funcion, peliculas)">
+    <form th:action="@{/funcion/guardar}" th:object="${funcion}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+
+        <div class="mb-3">
+            <label>Película</label>
+            <select th:field="*{pelicula}" class="form-select" required>
+                <option th:each="p : ${peliculas}" th:value="${p}" th:text="${p.titulo}"></option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Fecha</label>
+            <input type="date" th:field="*{fecha}" class="form-control" required/>
+        </div>
+
+        <div class="mb-3">
+            <label>Hora</label>
+            <input type="time" th:field="*{hora}" class="form-control" required/>
+        </div>
+
+        <div class="mb-3">
+            <label>Sala</label>
+            <input type="text" th:field="*{sala}" class="form-control"/>
+        </div>
+
+        <div class="mb-3">
+            <label>Precio</label>
+            <input type="number" min="0" step="0.01" th:field="*{precio}" class="form-control"/>
+        </div>
+
+        <div class="mb-3">
+            <label>Total Asientos</label>
+            <input type="number" min="1" th:field="*{totalAsientos}" class="form-control"/>
+        </div>
+
+        <button class="btn btn-primary">Guardar</button>
+        <a th:href="@{/funcion/listado}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+</body>
+</html>
+

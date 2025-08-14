@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:fragment="head">
+    <title>CineApp</title>
+    <meta charset="UTF-8"/>
+    <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/webjars/font-awesome/css/all.css}" rel="stylesheet"/>
+    <script th:src="@{/js/rutinas.js}"></script>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <style>
+        /* 🎬 Paleta de cine */
+        body {
+            background-color: #1b1b1b; /* negro suave */
+            color: #f5f5f5; /* texto claro */
+        }
+        .navbar {
+            background-color: #8b0000 !important; /* rojo burdeos */
+        }
+        .navbar-brand, .nav-link, .fas {
+            color: #ffd700 !important; /* dorado */
+        }
+        .navbar .nav-link:hover, .navbar .active {
+            color: #ffcc33 !important; /* dorado más claro al pasar el mouse */
+        }
+        #main-header {
+            background-color: #222 !important;
+            color: #ffd700 !important;
+        }
+        footer {
+            background-color: #8b0000 !important;
+            color: #f5f5f5 !important;
+        }
+        .dropdown-menu-dark {
+            background-color: #2e2e2e;
+            color: #ffd700;
+        }
+        .btn-dark {
+            background-color: #444 !important;
+            color: #ffd700 !important;
+        }
+    </style>
+</head>
+<body>
+
+<header th:fragment="header" class="header">
+    <nav class="navbar navbar-expand-sm navbar-dark p-0">
+        <div class="container">
+            <a th:href="@{/}" class="navbar-brand mb-0 h1"><i class="fas fa-film"></i> [[#{aplicacion.titulo}]]</a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <!-- Menú principal -->
+                <ul class="navbar-nav" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_VENDEDOR')">
+                    <li class="nav-item px-2"><a class="nav-link" th:href="@{/pelicula/listado}">[[#{plantilla.peliculas}]]</a></li>
+                    <li class="nav-item px-2"><a class="nav-link" th:href="@{/funcion/listado}">[[#{plantilla.funciones}]]</a></li>
+                    <li class="nav-item px-2"><a class="nav-link" th:href="@{/reserva/listado}">[[#{plantilla.reservas}]]</a></li>
+
+                    <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">[[#{plantilla.administracion}]]</a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" th:href="@{/usuario/listado}">[[#{plantilla.usuarios}]]</a></li>
+                            <li><a class="dropdown-item" th:href="@{/rol/listado}">[[#{plantilla.roles}]]</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <!-- Idiomas y login/logout -->
+                <div class="col-md-3">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"></a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" th:href="@{/(lang=es)}">ES</a></li>
+                                <li><a class="dropdown-item" th:href="@{/(lang=en)}">EN</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <!-- Bloque autenticación -->
+                    <ul class="navbar-nav" sec:authorize="!isAuthenticated()">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/login}"><i class="fas fa-sign-in-alt"></i></a>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav" sec:authorize="isAuthenticated()">
+                        <li class="nav-item my-auto">
+                            <i class="fas fa-user"></i>
+                            <span sec:authentication="name">Usuario</span>
+                        </li>
+                        <li class="nav-item my-auto">
+                            <form method="post" th:action="@{/logout}">
+                                <button class="btn btn-dark"><i class="fas fa-sign-out-alt"></i></button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section id="main-header" class="py-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h1><i class="fas fa-film"></i> [[#{plantilla.suCine}]]</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+</header>
+
+<footer th:fragment="footer" class="mt-5 p-2">
+    <div class="container">
+        <div class="col">
+            <p class="lead text-center">
+                &copy; [[#{plantilla.derechos}]]
+            </p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
+

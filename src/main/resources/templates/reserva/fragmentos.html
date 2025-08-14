@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Fragmento: Tabla de reservas -->
+<div th:fragment="tablaReservas(reservas)">
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Función</th>
+                <th>Cantidad Asientos</th>
+                <th>Total</th>
+                <th>Fecha Reserva</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="r : ${reservas}">
+                <td th:text="${r.usuario.nombre} + ' ' + ${r.usuario.apellidos}"></td>
+                <td th:text="${r.funcion.pelicula.titulo} + ' (' + ${r.funcion.fecha} + ' ' + ${r.funcion.hora} + ')'"></td>
+                <td th:text="${r.cantidadAsientos}"></td>
+                <td th:text="${#numbers.formatDecimal(r.total, 1, 'POINT', 2, 'NONE')}"></td>
+                <td th:text="${r.fechaReserva}"></td>
+                <td th:text="${r.estado}"></td>
+                <td>
+                    <a th:href="@{/reserva/modificar/{id}(id=${r.idReserva})}" class="btn btn-warning btn-sm">Editar</a>
+                    <a th:href="@{/reserva/eliminar/{id}(id=${r.idReserva})}" class="btn btn-danger btn-sm"
+                       onclick="return confirm('¿Eliminar esta reserva?')">Eliminar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!-- Fragmento: Formulario de reserva -->
+<div th:fragment="formReserva(reserva, usuarios, funciones)">
+    <form th:action="@{/reserva/guardar}" th:object="${reserva}" method="post">
+        <input type="hidden" th:field="*{idReserva}"/>
+
+        <div class="mb-3">
+            <label for="usuario">Usuario</label>
+            <select id="usuario" th:field="*{usuario}" class="form-select" required>
+                <option th:each="u : ${usuarios}" th:value="${u}" th:text="${u.nombre} + ' ' + ${u.apellidos}"></option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="funcion">Función</label>
+            <select id="funcion" th:field="*{funcion}" class="form-select" required>
+                <option th:each="f : ${funciones}" th:value="${f}" 
+                        th:text="${f.pelicula.titulo} + ' (' + ${f.fecha} + ' ' + ${f.hora} + ')'"></option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="cantidadAsientos" class="form-label">Cantidad de Asientos</label>
+            <input id="cantidadAsientos" type="number" min="1" th:field="*{cantidadAsientos}" class="form-control" required/>
+        </div>
+
+        <div class="mb-3">
+            <label for="total" class="form-label">Total</label>
+            <input id="total" type="number" min="0" step="0.01" th:field="*{total}" class="form-control" required/>
+        </div>
+
+        <div class="mb-3">
+            <label for="fechaReserva" class="form-label">Fecha Reserva</label>
+            <input id="fechaReserva" type="date" th:field="*{fechaReserva}" class="form-control" required/>
+        </div>
+
+        <div class="mb-3">
+            <label for="estado" class="form-label">Estado</label>
+            <input id="estado" type="text" th:field="*{estado}" class="form-control"/>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a th:href="@{/reserva/listado}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+</body>
+</html>
+
